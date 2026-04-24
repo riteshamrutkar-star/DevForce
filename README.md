@@ -1,6 +1,8 @@
 <div align="center">
   <img src="https://img.shields.io/badge/GDG-Hackathon_Submission-blue?style=for-the-badge&logo=google" alt="GDG Hackathon" />
-  <h1>⚡ DevForce</h1>
+  <br><br>
+  <img src="assets/logo.png" alt="DevForce Logo" width="200"/>
+  <h1>DevForce</h1>
   <p><b>Stop scrolling. Start building.</b></p>
   
   > *"Because finding a good co-founder shouldn't be harder than centering a div."*
