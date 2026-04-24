@@ -22,11 +22,6 @@ LinkedIn is too formal. Twitter is too noisy. Meetups only happen once a month.
 
 **DevForce** is "Tinder for Developers", a location-based matchmaking platform designed to connect you with local tech talent, whether you need a mentor, a UI designer, or a pair-programming buddy. Swipe, match, and collaborate in real-time.
 
-<div align="center">
-  <!-- TODO: Drop a cool GIF of your app swiping here! -->
-  <code>[ Drop a GIF of your app swiping here! ]</code>
-</div>
-
 ---
 
 ## 🛠️ The Hack: What's under the hood?
