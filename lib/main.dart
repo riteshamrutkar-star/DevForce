@@ -253,6 +253,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _nextPage() {
+    // ── Validation ────────────────────────────────────────────────────
+    if (_currentPage == 0 && _nameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your full name to continue.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    if (_currentPage == 2 && _skillsController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter at least one primary skill.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    // ── Navigation ────────────────────────────────────────────────────
     if (_currentPage < 2) {
       _pageController.animateToPage(
         _currentPage + 1,
@@ -992,19 +1012,18 @@ Return JSON:
     );
   }
 
-  // Handle what happens when a card is actually swiped
   // Handle what happens when a card is swiped
   bool _onSwipe(
     int previousIndex,
     int? currentIndex,
     CardSwiperDirection direction,
   ) {
+    final swipedUser = _potentialTeammates[previousIndex];
+    final uid = swipedUser['uid'] as String? ?? '';
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+
     if (direction == CardSwiperDirection.right) {
-      final matchedUser = _potentialTeammates[previousIndex];
-      final uid = matchedUser['uid'] as String? ?? '';
-      
-      // CREATE CHAT DOCUMENT on right swipe (Match)
-      final currentUid = FirebaseAuth.instance.currentUser?.uid;
+      // ── CREATE CHAT DOCUMENT on right swipe (Match) ──────────────────
       if (currentUid != null && uid.isNotEmpty) {
         final chatId = [currentUid, uid]..sort();
         FirebaseFirestore.instance.collection('chats').doc(chatId.join('_')).set({
@@ -1017,11 +1036,23 @@ Return JSON:
         context: context,
         barrierDismissible: false,
         builder: (context) => MatchDialog(
-          matchedUser: matchedUser,
+          matchedUser: swipedUser,
           myProfile: _myProfile,
           geminiAnalysis: _geminiAnalyses[uid],
         ),
       );
+    } else if (direction == CardSwiperDirection.left) {
+      // ── RECORD REJECTION on left swipe ───────────────────────────────
+      // This ensures rejected profiles stay at the bottom of the stack
+      // on subsequent fetches (via the rejectionSet logic in _fetchUsersFromFirebase)
+      if (currentUid != null && uid.isNotEmpty) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUid)
+            .set({
+          'rejections': FieldValue.arrayUnion([uid]),
+        }, SetOptions(merge: true));
+      }
     }
     return true;
   }

@@ -48,10 +48,10 @@ I know you have 50+ projects to review. I made testing this one effortless.
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/your-username/devforce.git
+git clone https://github.com/riteshamrutkar/DevForce.git
 
 # 2. Jump in
-cd devforce
+cd DevForce
 flutter pub get
 
 # 3. Hit run
